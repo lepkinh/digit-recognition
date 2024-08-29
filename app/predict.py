@@ -1,5 +1,6 @@
 # script for making predictions
 
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
@@ -21,6 +22,8 @@ model = load_model('digit_recognition_model.h5')
 predictions = model.predict(x_test)
 
 # plot the first test image and the model's prediction
-plt.imshow(x_test[0].reshape(28, 28), cmap='gray')
-plt.title(f"Predicted: {np.argmax(predictions[0])}")
-plt.show()
+for x in range(50):
+    randomIntegerN = random.randint(0, 500)
+    plt.imshow(x_test[randomIntegerN].reshape(28, 28), cmap='gray')
+    plt.title(f"Predicted: {np.argmax(predictions[randomIntegerN])}, img #{randomIntegerN}")
+    plt.show()
