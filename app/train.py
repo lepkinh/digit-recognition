@@ -1,6 +1,9 @@
+# script for loading data and training model
+
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.utils import to_categorical
+from app.model import create_model
 
 # preparing MNIST dataset (handdrawn digits, 28x28 pixel)
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -17,4 +20,11 @@ x_test = x_test.reshape((-1, 28, 28, 1))
 y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
+# create model
+model = create_model()
 
+# train model
+model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, batch_size=128)
+
+# save trained model
+model.save('digit_recognition_model.h5')
