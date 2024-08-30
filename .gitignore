@@ -1,2 +1,34 @@
-/venv/
-/app/__pycache__/
+# credit goes to GPT4o for writing this out for me
+
+# Python
+*.pyc
+__pycache__/
+env/
+venv/
+*.pyo
+*.pyd
+*.pdb
+.Python
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
+
+# Flask files
+instance/
+*.sqlite
+*.db
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.DS_Store
+
+# React build
+frontend/build/
+
+# VS Code
+.vscode/
