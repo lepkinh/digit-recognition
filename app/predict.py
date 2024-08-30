@@ -22,7 +22,7 @@ model = load_model('digit_recognition_model.h5')
 predictions = model.predict(x_test)
 
 # plot the first test image and the model's prediction
-for x in range(50):
+for x in range(5):
     randomIntegerN = random.randint(0, 500)
     plt.imshow(x_test[randomIntegerN].reshape(28, 28), cmap='gray')
     plt.title(f"Predicted: {np.argmax(predictions[randomIntegerN])}, img #{randomIntegerN}")
