@@ -13,16 +13,9 @@ def predict():
     # parse image data from request
     data = request.get_json()
 
-    # convert the received data to a numpy array
-    image = np.array(data['image'])  
-
-    # reshape for the model
-    image = image.reshape(1, 28, 28, 1)  
-
-    # make prediction
-    prediction = model.predict(image)
-    predicted_digit = np.argmax(prediction)
-
+    # flat list of pixel values***
+    image_data = data['image']
+    predicted_digit = predict_digit(image_data)
     return jsonify({'digit': int(predicted_digit)})
 
 if __name__ == '__main__':
