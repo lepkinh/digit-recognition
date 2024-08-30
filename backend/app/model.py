@@ -3,6 +3,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 
+# this was useful pre model training, left in bc
 def create_model():
     # create sequential model (linear stack of layers, each layer has one input tensor and one output tensor)
     model = Sequential()
@@ -25,3 +26,33 @@ def create_model():
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     return model
+
+# load trained model, code from here on is post model training
+model = load_model("digit_recognition_model.h5")
+
+def preprocess_image(image_data):
+    """
+    preprocess the incoming image data to match the format expected by the model
+    """
+    image = np.array(image_data).astype('float32')
+
+    # assuming the image data is a flat list
+    image = image.reshape(28, 28)  
+
+    # normalize to range [0, 1]
+    image = image / 255.0  
+
+    # add batch dimension
+    image = np.expand_dims(image, axis=0) 
+
+    # add channel dimension
+    image = np.expand_dims(image, axis=-1)  
+    return image
+
+def predict_digit(image_data):
+    """
+    predict the digit from the given image data
+    """
+    processed_image = preprocess_image(image_data)
+    prediction = model.predict(processed_image)
+    return np.argmax(prediction)
