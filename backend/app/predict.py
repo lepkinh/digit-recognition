@@ -2,10 +2,18 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
-from extra_keras_datasets import emnist
+from tensorflow.keras.datasets import mnist
+from train import create_letter_dataset
 
-# Load EMNIST dataset
-(_, _), (x_test, _) = emnist.load_data(type='balanced')
+# Load MNIST dataset
+(_, _), (x_test_digits, y_test_digits) = mnist.load_data()
+
+# Create synthetic letter dataset
+x_test_letters, y_test_letters = create_letter_dataset(num_samples_per_letter=200)
+
+# Combine digits and letters
+x_test = np.concatenate([x_test_digits, x_test_letters])
+y_test = np.concatenate([y_test_digits, y_test_letters])
 
 # Normalize the images to the range [0, 1]
 x_test = x_test.astype('float32') / 255
@@ -28,5 +36,6 @@ for _ in range(5):
     plt.imshow(x_test[random_index].reshape(28, 28), cmap='gray')
     predicted_class = np.argmax(predictions[random_index])
     predicted_char = char_map[predicted_class]
-    plt.title(f"Predicted: {predicted_char}, img #{random_index}")
+    true_char = char_map[y_test[random_index]]
+    plt.title(f"Predicted: {predicted_char}, True: {true_char}, img #{random_index}")
     plt.show()
