@@ -1,29 +1,32 @@
-# script for making predictions
-
 import random
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
-from tensorflow.keras.datasets import mnist
+from extra_keras_datasets import emnist
 
-# load MNIST dataset
-(_, _), (x_test, _) = mnist.load_data()
+# Load EMNIST dataset
+(_, _), (x_test, _) = emnist.load_data(type='balanced')
 
-# normalize the images to the range [0, 1]
+# Normalize the images to the range [0, 1]
 x_test = x_test.astype('float32') / 255
 
-# reshape data to match Keras input format
+# Reshape data to match Keras input format
 x_test = x_test.reshape((-1, 28, 28, 1))
 
-# load the trained model
-model = load_model('digit_recognition_model.h5')
+# Load the trained model
+model = load_model('alphanumeric_recognition_model.h5')
 
-# make predictions on the test set
+# Make predictions on the test set
 predictions = model.predict(x_test)
 
-# plot the first test image and the model's prediction
-for x in range(5):
-    randomIntegerN = random.randint(0, 500)
-    plt.imshow(x_test[randomIntegerN].reshape(28, 28), cmap='gray')
-    plt.title(f"Predicted: {np.argmax(predictions[randomIntegerN])}, img #{randomIntegerN}")
+# Define a mapping from class index to character
+char_map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+# Plot some test images and the model's predictions
+for _ in range(5):
+    random_index = random.randint(0, len(x_test) - 1)
+    plt.imshow(x_test[random_index].reshape(28, 28), cmap='gray')
+    predicted_class = np.argmax(predictions[random_index])
+    predicted_char = char_map[predicted_class]
+    plt.title(f"Predicted: {predicted_char}, img #{random_index}")
     plt.show()
