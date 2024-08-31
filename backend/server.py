@@ -2,13 +2,16 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from app.predict import predict_digit
+from tensorflow.keras.models import load_model
 from PIL import Image
 import numpy as np
 import io
 
 app = Flask(__name__)
 CORS(app)
+
+# Load the trained model
+model = load_model('digit_recognition_model.h5')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -20,8 +23,10 @@ def predict():
     image = image.resize((28, 28))
     image_array = np.array(image).reshape(-1, 28, 28, 1) / 255.0
     
-    prediction = predict_digit(image_array)
-    return jsonify({'prediction': int(prediction)})
+    prediction = model.predict(image_array)
+    predicted_digit = np.argmax(prediction)
+    
+    return jsonify({'prediction': int(predicted_digit)})
 
 if __name__ == '__main__':
     app.run(debug=True)
