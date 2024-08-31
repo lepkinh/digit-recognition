@@ -1,2 +1,31 @@
-/venv/
-/app/__pycache__/
+# Node modules
+frontend/node_modules/
+
+# Python virtual environment
+backend/venv/
+
+# Python bytecode
+*.pyc
+__pycache__/
+
+# Flask
+*.db
+*.sqlite3
+
+# React build artifacts
+frontend/build/
+
+# Logs
+*.log
+
+# Environment variables
+backend/.env
+frontend/.env
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
