@@ -1,15 +1,13 @@
 // main React app file  
 
 import React, { useRef, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import DrawDigit from './components/DrawDigit';
-import About from './components/About';
-import Header from './components/Header';
 
 function App() {
-    const canvasRef = useRef(null);
-    const [isDrawing, setIsDrawing] = useState(false);
+    const canvasRef = useRef(null);  // Reference to the canvas
+    const [isDrawing, setIsDrawing] = useState(false);  // State to track drawing
+    const [prediction, setPrediction] = useState(null);  // State to store prediction
 
+    // Function to start drawing
     const startDrawing = (e) => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -18,6 +16,7 @@ function App() {
         setIsDrawing(true);
     };
 
+    // Function to continue drawing as the mouse moves
     const draw = (e) => {
         if (!isDrawing) return;
         const canvas = canvasRef.current;
@@ -26,35 +25,12 @@ function App() {
         ctx.stroke();
     };
 
+    // Function to stop drawing
     const stopDrawing = () => {
         setIsDrawing(false);
     };
 
-    const sendImageDataToBackend = () => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-
-        // Get image data
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-        // Preprocess image data and send to backend
-        const processedData = preprocessImageData(imageData);
-        fetch('/predict', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ image: processedData })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Prediction result:", data.prediction);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    };
-
+    // Function to preprocess the image data (grayscale and normalize)
     const preprocessImageData = (imageData) => {
         // Create a temporary canvas to resize the image
         const tempCanvas = document.createElement('canvas');
@@ -82,10 +58,37 @@ function App() {
         // Return the flattened grayscale image array
         return grayscaleImage;
     };
-    
+
+    // Function to handle the Predict button click
+    const handlePredictClick = async () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        const preprocessedData = preprocessImageData(imageData);
+
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ image: preprocessedData }),
+        });
+
+        const result = await response.json();
+        setPrediction(result.prediction);  // Set the prediction received from the backend
+    };
+
+    // Function to handle the Clear button click
+    const handleClearClick = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
+        setPrediction(null);  // Clear the prediction as well
+    };
 
     return (
         <div className="App">
+            {/* Canvas for drawing */}
             <canvas
                 ref={canvasRef}
                 width={280}
@@ -96,10 +99,15 @@ function App() {
                 onMouseUp={stopDrawing}
                 onMouseLeave={stopDrawing}
             ></canvas>
-            <button onClick={sendImageDataToBackend}>Predict</button>
+            
+            {/* Buttons for predicting and clearing */}
+            <button onClick={handlePredictClick}>Predict</button>
+            <button onClick={handleClearClick}>Clear</button>
+            
+            {/* Display the prediction result */}
+            {prediction !== null && <p>Model's prediction: {prediction}</p>}
         </div>
     );
 }
 
 export default App;
-
