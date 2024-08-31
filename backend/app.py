@@ -38,10 +38,11 @@ def predict():
             raise KeyError("No image data found in request")
 
         image_data = data['image']
+        print("Received image data:", image_data)
         logging.debug("Image data received successfully")
 
         # Convert list to numpy array and reshape for your model (28x28 input for MNIST)
-        image_array = np.array(image_data).reshape(28, 28)
+        image_array = np.array(image_data).reshape((1, 28, 28, 1))
 
         # Normalize the pixel values (0-255 -> 0-1)
         image_array = image_array / 255.0
@@ -53,6 +54,8 @@ def predict():
         # Make the prediction
         prediction = model.predict(image_array)
         predicted_digit = np.argmax(prediction)
+
+        print("Predicted digit:", predicted_digit)
 
         return jsonify({'prediction': int(predicted_digit)})
     
