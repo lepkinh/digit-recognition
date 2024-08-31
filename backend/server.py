@@ -1,5 +1,3 @@
-# Description: This file contains the Flask server that will be used to serve the model and make predictions.
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from tensorflow.keras.models import load_model
@@ -22,6 +20,7 @@ def predict():
     image = Image.open(io.BytesIO(image_file.read())).convert('L')
     image = image.resize((28, 28))
     image_array = np.array(image).reshape(-1, 28, 28, 1) / 255.0
+    image_array = 1 - image_array  # Invert the colors
     
     prediction = model.predict(image_array)
     predicted_digit = np.argmax(prediction)

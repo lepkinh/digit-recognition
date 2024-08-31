@@ -11,7 +11,32 @@ const DigitRecognizer = () => {
     ctx.lineWidth = 15;
     ctx.lineCap = 'round';
     ctx.strokeStyle = 'black';
+    clearCanvas();
   }, []);
+
+  const drawGrid = (ctx) => {
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 1;
+    
+    // Draw vertical lines
+    for (let i = 0; i <= 280; i += 40) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, 280);
+      ctx.stroke();
+    }
+    
+    // Draw horizontal lines
+    for (let i = 0; i <= 280; i += 40) {
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(280, i);
+      ctx.stroke();
+    }
+    
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 15;
+  };
 
   const startDrawing = (e) => {
     const { offsetX, offsetY } = getCoordinates(e);
@@ -47,7 +72,9 @@ const DigitRecognizer = () => {
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawGrid(ctx);
     setPrediction(null);
   };
 
