@@ -28,7 +28,7 @@ const DigitRecognizer = () => {
     <div className="flex flex-col items-center">
       <canvas
         ref={canvasRef}
-        width={280}
+        width={280} // Change this to 28x28
         height={280}
         className="border border-gray-300"
       />
