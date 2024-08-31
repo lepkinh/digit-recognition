@@ -1,8 +1,13 @@
+import sys
+import os
+
+# Add the parent directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.datasets import mnist
 from extra_keras_datasets import emnist
-from app.model import create_model
+from model import create_model  # Changed from app.model to model
 
 # Load EMNIST dataset
 (x_train, y_train), (x_test, y_test) = emnist.load_data(type='balanced')

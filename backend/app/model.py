@@ -10,7 +10,7 @@ def create_model():
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(36, activation='softmax'))  # 36 classes: 10 digits + 26 letters
+    model.add(Dense(36, activation='softmax'))  # 36 classes: 10 digits + 26 upper case letters + 11 lower case letters
 
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     return model
